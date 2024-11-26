@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/app/store/hooks';
 import { selectIsAuthenticated, logout } from '@/app/store/authSlice';
 import cls from './Navbar.module.scss';
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     dispatch(logout());
     navigate('/login');
-  };
+  }, [dispatch, navigate]);
 
   return (
     <nav className={cls.navbar}>

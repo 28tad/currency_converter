@@ -16,6 +16,8 @@ import CurrencyItem from '@/components/CurrencyItem/CurrencyItem';
 import Pagination from '@/components/common/Pagination/Pagination';
 import cls from './RatesPage.module.scss';
 
+const SORT_FIELD_RATE_USD = 'rateUsd';
+
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
 
@@ -91,7 +93,7 @@ const Home: React.FC = () => {
   }, [dispatch, pagination, perPage]);
 
   const sortArrow = useMemo(() => {
-    if (sort.field === 'rateUsd') {
+    if (sort.field === SORT_FIELD_RATE_USD) {
       return sort.direction === 'asc' ? '↑' : '↓';
     }
     return '';
@@ -125,7 +127,7 @@ const Home: React.FC = () => {
             <thead>
               <tr>
                 <th>Валюта</th>
-                <th onClick={() => handleSortChange('rateUsd')}>
+                <th onClick={() => handleSortChange(SORT_FIELD_RATE_USD)}>
                   Курс (USD)
                   {' '}
                   {sortArrow}
