@@ -14,11 +14,12 @@ import { Currency, SortState } from '@/app/store/types';
 import { Loader } from '@/components/common/Loader/Loader';
 import CurrencyItem from '@/components/CurrencyItem/CurrencyItem';
 import Pagination from '@/components/common/Pagination/Pagination';
+import Big from 'big.js';
 import cls from './RatesPage.module.scss';
 
 const SORT_FIELD_RATE_USD = 'rateUsd';
 
-const Home: React.FC = () => {
+const Rates: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const currencies = useAppSelector(selectAllCurrencies);
@@ -30,12 +31,12 @@ const Home: React.FC = () => {
   const sortCurrencies = useCallback((data: Currency[], sortState: SortState): Currency[] => {
     if (sortState.field) {
       return data.sort((a, b) => {
-        const fieldA = parseFloat(a[sortState.field as keyof Currency] as string);
-        const fieldB = parseFloat(b[sortState.field as keyof Currency] as string);
+        const fieldA = new Big(a[sortState.field as keyof Currency] as string);
+        const fieldB = new Big(b[sortState.field as keyof Currency] as string);
         if (sortState.direction === 'asc') {
-          return fieldA - fieldB;
+          return fieldA.cmp(fieldB);
         }
-        return fieldB - fieldA;
+        return fieldB.cmp(fieldA);
       });
     }
     return data;
@@ -152,4 +153,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Rates;

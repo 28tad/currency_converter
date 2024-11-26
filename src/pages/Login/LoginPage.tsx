@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { login, selectAuthError, clearError } from '@/app/store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { RoutePath } from '@/app/router/routeConfig';
 import cls from './Login.module.scss';
 
 export const LoginPage: React.FC = () => {
@@ -25,7 +26,7 @@ export const LoginPage: React.FC = () => {
 
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   if (isAuthenticated) {
-    navigate('/rates');
+    navigate(RoutePath.rates);
   }
 
   return (
