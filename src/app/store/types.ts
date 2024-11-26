@@ -26,8 +26,15 @@ export interface CurrenciesState {
   lastUpdated: number | null;
 }
 
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: { username: string } | null;
+  error: string | null;
+}
+
 export interface StateSchema {
   currencies: CurrenciesState;
+  auth: AuthState;
 }
 
 export type StateSchemaKey = keyof StateSchema;
