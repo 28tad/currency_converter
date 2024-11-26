@@ -1,0 +1,64 @@
+@use '../../index.scss' as *;
+@use 'sass:color';
+
+.convertPage {
+  padding: $spacing-md;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h2 {
+    color: $color-primary;
+    margin-bottom: $spacing-md;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    width: 100%;
+    max-width: 500px;
+    background-color: $color-white;
+    padding: $spacing-lg;
+    border: 1px solid $color-secondary;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: $spacing-xs;
+      font-size: $font-size-base;
+      color: $color-dark;
+    }
+
+    select,
+    input {
+      padding: $spacing-xs;
+      font-size: $font-size-base;
+      border: 1px solid $color-secondary;
+      border-radius: 4px;
+
+      &:focus {
+        outline: none;
+        border-color: $color-primary;
+      }
+    }
+  }
+
+  .result {
+    margin-top: $spacing-md;
+    font-size: $font-size-lg;
+    color: $color-secondary;
+    text-align: center;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    .form {
+      padding: $spacing-md;
+    }
+  }
+}

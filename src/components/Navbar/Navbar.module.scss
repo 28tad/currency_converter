@@ -1,0 +1,90 @@
+@use '../../index.scss' as *;
+@use 'sass:color';
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $color-primary;
+  padding: $spacing-sm $spacing-md;
+
+  .logo a {
+    color: $color-white;
+    font-size: $font-size-lg;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+      color: color.adjust($color-white, $lightness: 10%);
+    }
+  }
+
+  .navLinks {
+    list-style: none;
+    display: flex;
+    gap: $spacing-md;
+
+    li {
+      a {
+        color: $color-white;
+        text-decoration: none;
+        font-size: $font-size-base;
+
+        &.active {
+          border-bottom: 2px solid $color-white;
+        }
+
+        &:hover {
+          color: color.adjust($color-white, $lightness: 10%);
+        }
+      }
+    }
+  }
+
+  .authButton {
+    button {
+      padding: $spacing-xs $spacing-sm;
+      font-size: $font-size-base;
+      background-color: $color-secondary;
+      color: $color-white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: color.adjust($color-secondary, $lightness: 10%);
+      }
+    }
+  }
+}
+
+/* Адаптивность */
+@media (max-width: $breakpoint-md) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .navLinks {
+      flex-direction: column;
+      width: 100%;
+
+      li {
+        width: 100%;
+
+        a {
+          display: block;
+          width: 100%;
+          padding: $spacing-xs 0;
+        }
+      }
+    }
+
+    .authButton {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: $spacing-sm;
+    }
+  }
+}
