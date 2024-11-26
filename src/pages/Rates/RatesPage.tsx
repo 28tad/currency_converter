@@ -1,6 +1,5 @@
-import { useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from '@/app/store/hooks';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import {
   fetchCurrencies,
   selectAllCurrencies,
@@ -20,11 +19,11 @@ import cls from './RatesPage.module.scss';
 const Home = () => {
   const dispatch = useAppDispatch();
 
-  const currencies = useSelector(selectAllCurrencies);
-  const status = useSelector(selectCurrenciesStatus);
-  const error = useSelector(selectCurrenciesError);
-  const pagination = useSelector(selectPagination);
-  const sort = useSelector(selectSort);
+  const currencies = useAppSelector(selectAllCurrencies);
+  const status = useAppSelector(selectCurrenciesStatus);
+  const error = useAppSelector(selectCurrenciesError);
+  const pagination = useAppSelector(selectPagination);
+  const sort = useAppSelector(selectSort);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -60,19 +59,23 @@ const Home = () => {
   const endIndex = startIndex + perPage;
   const paginatedCurrencies = displayedCurrencies.slice(startIndex, endIndex);
 
-  const handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePerPageChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     const newPerPage = parseInt(e.target.value, 10);
     dispatch(setPagination({ page: 1, perPage: newPerPage }));
     localStorage.setItem('perPage', newPerPage.toString());
-  };
+  }, [dispatch]);
 
-  const handleSortChange = (field: string) => {
+  const handleSortChange = useCallback((field: string) => {
     let direction: 'asc' | 'desc' = 'asc';
     if (sort.field === field && sort.direction === 'asc') {
       direction = 'desc';
     }
     dispatch(setSort({ field, direction }));
-  };
+  }, [dispatch, sort.field, sort.direction]);
+
+  const handlePageChange = useCallback((newPage: number) => {
+    dispatch(setPagination({ ...pagination, page: newPage }));
+  }, [dispatch, pagination]);
 
   useEffect(() => {
     const savedPerPage = parseInt(localStorage.getItem('perPage') || '10', 10);
@@ -133,7 +136,7 @@ const Home = () => {
             totalItems={displayedCurrencies.length}
             currentPage={pagination.page}
             perPage={pagination.perPage}
-            onPageChange={(newPage) => dispatch(setPagination({ ...pagination, page: newPage }))}
+            onPageChange={handlePageChange}
           />
         </>
       )}
