@@ -1,5 +1,3 @@
-export const ConvertPage = () => {
-  return (
-    <div>ConvertPage</div>
-  )
+export function ConvertPage() {
+  return <div>ConvertPage</div>;
 }

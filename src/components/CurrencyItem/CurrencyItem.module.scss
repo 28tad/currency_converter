@@ -1,0 +1,10 @@
+@use '../../index.scss' as *;
+
+.currencyRow {
+  td {
+    padding: $spacing-sm;
+    font-size: $font-size-base;
+    color: $color-dark;
+    border-bottom: 1px solid $color-secondary;
+  }
+}

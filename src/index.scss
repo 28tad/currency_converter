@@ -1,0 +1,35 @@
+
+/* Переменные цветов */
+$color-primary: #007bff;   /* Синий цвет */
+$color-secondary: #6c757d; /* Серый цвет */
+$color-light: #f8f9fa;     /* Светло-серый */
+$color-dark: #343a40;      /* Темно-серый */
+$color-white: #ffffff;
+$color-black: #000000;
+
+/* Размеры шрифтов */
+$font-size-base: 16px;
+$font-size-sm: 14px;
+$font-size-lg: 18px;
+
+/* Отступы */
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+/* Точки для адаптивности */
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: $font-size-base;
+  background-color: $color-light;
+  color: $color-dark;
+}
+

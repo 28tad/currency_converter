@@ -1,0 +1,93 @@
+@use '../../index.scss' as *;
+@use 'sass:color';
+
+.home {
+  padding: $spacing-md;
+
+  h1 {
+    color: $color-primary;
+    text-align: center;
+    margin-bottom: $spacing-md;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-md;
+
+    label {
+      font-size: $font-size-base;
+      color: $color-dark;
+
+      select {
+        margin-left: $spacing-sm;
+        padding: $spacing-xs;
+        font-size: $font-size-base;
+      }
+    }
+
+    button {
+      padding: $spacing-xs $spacing-sm;
+      font-size: $font-size-base;
+      background-color: $color-primary;
+      color: $color-white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: color.adjust($color-primary, $lightness: -10%);
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: $spacing-md;
+
+    thead {
+      background-color: $color-primary;
+
+      th {
+        padding: $spacing-sm;
+        font-size: $font-size-base;
+        color: $color-white;
+        text-align: left;
+        cursor: pointer;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: $color-light;
+        }
+
+        td {
+          padding: $spacing-sm;
+          font-size: $font-size-base;
+          color: $color-dark;
+        }
+      }
+    }
+  }
+
+  /* Адаптивность */
+  @media (max-width: $breakpoint-md) {
+    .controls {
+      flex-direction: column;
+      align-items: flex-start;
+
+      label, button {
+        margin-bottom: $spacing-sm;
+      }
+    }
+
+    table {
+      font-size: $font-size-sm;
+    }
+  }
+}
