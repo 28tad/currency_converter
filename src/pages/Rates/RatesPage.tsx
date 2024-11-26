@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import {
   fetchCurrencies,
@@ -10,13 +10,13 @@ import {
   selectSort,
   setSort,
 } from '@/app/store/currenciesSlice';
-import { Currency } from '@/app/store/types';
+import { Currency, SortState } from '@/app/store/types';
 import { Loader } from '@/components/common/Loader/Loader';
-import { CurrencyItem } from '@/components/CurrencyItem/CurrencyItem';
+import CurrencyItem from '@/components/CurrencyItem/CurrencyItem';
 import Pagination from '@/components/common/Pagination/Pagination';
 import cls from './RatesPage.module.scss';
 
-const Home = () => {
+const Home: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const currencies = useAppSelector(selectAllCurrencies);
@@ -24,6 +24,20 @@ const Home = () => {
   const error = useAppSelector(selectCurrenciesError);
   const pagination = useAppSelector(selectPagination);
   const sort = useAppSelector(selectSort);
+
+  const sortCurrencies = useCallback((data: Currency[], sortState: SortState): Currency[] => {
+    if (sortState.field) {
+      return data.sort((a, b) => {
+        const fieldA = parseFloat(a[sortState.field as keyof Currency] as string);
+        const fieldB = parseFloat(b[sortState.field as keyof Currency] as string);
+        if (sortState.direction === 'asc') {
+          return fieldA - fieldB;
+        }
+        return fieldB - fieldA;
+      });
+    }
+    return data;
+  }, []);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -39,25 +53,17 @@ const Home = () => {
 
   const displayedCurrencies = useMemo(() => {
     const data = [...currencies];
-
-    if (sort.field) {
-      data.sort((a: Currency, b: Currency) => {
-        const fieldA = parseFloat(a[sort.field as keyof Currency] as string);
-        const fieldB = parseFloat(b[sort.field as keyof Currency] as string);
-        if (sort.direction === 'asc') {
-          return fieldA - fieldB;
-        }
-        return fieldB - fieldA;
-      });
-    }
-
-    return data;
-  }, [currencies, sort]);
+    return sortCurrencies(data, sort);
+  }, [currencies, sort, sortCurrencies]);
 
   const { page, perPage } = pagination;
   const startIndex = (page - 1) * perPage;
   const endIndex = startIndex + perPage;
-  const paginatedCurrencies = displayedCurrencies.slice(startIndex, endIndex);
+
+  const paginatedCurrencies = useMemo(
+    () => displayedCurrencies.slice(startIndex, endIndex),
+    [displayedCurrencies, startIndex, endIndex],
+  );
 
   const handlePerPageChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     const newPerPage = parseInt(e.target.value, 10);
@@ -79,33 +85,33 @@ const Home = () => {
 
   useEffect(() => {
     const savedPerPage = parseInt(localStorage.getItem('perPage') || '10', 10);
-    dispatch(setPagination({ ...pagination, perPage: savedPerPage }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
-
-  let arrow = '';
-
-  if (sort.field === 'rateUsd') {
-    if (sort.direction === 'asc') {
-      arrow = '↑';
-    } else {
-      arrow = '↓';
+    if (savedPerPage !== perPage) {
+      dispatch(setPagination({ ...pagination, perPage: savedPerPage }));
     }
-  }
+  }, [dispatch, pagination, perPage]);
+
+  const sortArrow = useMemo(() => {
+    if (sort.field === 'rateUsd') {
+      return sort.direction === 'asc' ? '↑' : '↓';
+    }
+    return '';
+  }, [sort.field, sort.direction]);
 
   return (
     <div className={cls.home}>
+      <h1>Список курсов валют</h1>
       {status === 'loading' && <Loader />}
       {status === 'failed' && (
-      <p>
-        Ошибка:
-        {error}
-      </p>
+        <p>
+          Ошибка:
+          {' '}
+          {error}
+        </p>
       )}
       {status === 'succeeded' && (
         <>
           <div className={cls.controls}>
-            <select value={pagination.perPage} onChange={handlePerPageChange}>
+            <select value={perPage} onChange={handlePerPageChange}>
               <option value={10}>10</option>
               <option value={25}>25</option>
               <option value={50}>50</option>
@@ -122,7 +128,7 @@ const Home = () => {
                 <th onClick={() => handleSortChange('rateUsd')}>
                   Курс (USD)
                   {' '}
-                  {arrow}
+                  {sortArrow}
                 </th>
               </tr>
             </thead>
@@ -134,8 +140,8 @@ const Home = () => {
           </table>
           <Pagination
             totalItems={displayedCurrencies.length}
-            currentPage={pagination.page}
-            perPage={pagination.perPage}
+            currentPage={page}
+            perPage={perPage}
             onPageChange={handlePageChange}
           />
         </>

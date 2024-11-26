@@ -40,6 +40,7 @@ module.exports = {
       'import/prefer-default-export': 'off',
       'no-plusplus': 'off',
       'no-param-reassign': 'off',
+      'max-len': ['error', { ignoreComments: true, code: 120 }],
     },
     settings: {
       'import/resolver': {

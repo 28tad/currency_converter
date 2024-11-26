@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '@/app/store/hooks';
 import { selectIsAuthenticated, logout } from '@/app/store/authSlice';
 import cls from './Navbar.module.scss';
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
