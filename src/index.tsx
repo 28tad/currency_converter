@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './app/App';
 import { StoreProvider } from './app/store/StoreProvider';
 import './index.scss';
+import ErrorBoundary from './components/common/ErrorBoundary/ErrorBoundary';
 
 const rootElement = document.getElementById('root');
 
@@ -15,7 +16,9 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
   <StoreProvider>
     <BrowserRouter>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </BrowserRouter>
   </StoreProvider>,
 );
