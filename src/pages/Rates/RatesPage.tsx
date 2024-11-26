@@ -19,8 +19,6 @@ import cls from './RatesPage.module.scss';
 
 const SORT_FIELD_RATE_USD = 'rateUsd';
 
-throw new Error();
-
 const Rates: React.FC = () => {
   const dispatch = useAppDispatch();
 
