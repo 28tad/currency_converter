@@ -1,5 +1,3 @@
-// src/components/Pagination/Pagination.tsx
-
 import React from 'react';
 import { classNames } from '@/lib/classNames';
 import cls from './Pagination.module.scss';

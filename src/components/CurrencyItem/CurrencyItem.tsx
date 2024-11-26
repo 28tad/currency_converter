@@ -10,7 +10,6 @@ const CurrencyItem: React.FC<CurrencyItemProps> = ({ currency }) => (
   <tr className={cls.currencyRow}>
     <td>{currency.symbol}</td>
     <td>{Number(currency.rateUsd).toFixed(18)}</td>
-    {/* Другие поля при необходимости */}
   </tr>
 );
 
