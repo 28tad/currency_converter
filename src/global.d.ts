@@ -6,4 +6,9 @@ declare module '*.scss' {
   export = classnames;
 }
 
+declare module 'big.js' {
+  const Big: any;
+  export = Big;
+}
+
 declare const __IS_DEV__: boolean;

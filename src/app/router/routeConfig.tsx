@@ -1,6 +1,6 @@
 import { RouteProps } from 'react-router-dom';
 import { RatesPageAsync as RatesPage } from '@/pages/Rates/RatesPage.async';
-import { ConvertPage } from '@/pages/Convert/ConvertPage';
+import { ConvertPageAsync as ConvertPage } from '@/pages/Convert/ConvertPage.async';
 import { NotFoundPage } from '@/pages/NotFound/NotFoundPage';
 import { LoginPage } from '@/pages/Login/LoginPage';
 
