@@ -15,6 +15,7 @@ import { Loader } from '@/components/common/Loader/Loader';
 import CurrencyItem from '@/components/CurrencyItem/CurrencyItem';
 import Pagination from '@/components/common/Pagination/Pagination';
 import Big from 'big.js';
+import StatusHandler from '@/components/StatusHandler/StatusHandler';
 import cls from './RatesPage.module.scss';
 
 const SORT_FIELD_RATE_USD = 'rateUsd';
@@ -103,52 +104,42 @@ const Rates: React.FC = () => {
   return (
     <div className={cls.home}>
       <h1>Список курсов валют</h1>
-      {status === 'loading' && <Loader />}
-      {status === 'failed' && (
-        <p>
-          Ошибка:
-          {' '}
-          {error}
-        </p>
-      )}
-      {status === 'succeeded' && (
-        <>
-          <div className={cls.controls}>
-            <select value={perPage} onChange={handlePerPageChange}>
-              <option value={10}>10</option>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-            </select>
-            <button type="button" onClick={() => dispatch(fetchCurrencies())}>
-              Обновить данные
-            </button>
-          </div>
-          <table className={cls.table}>
-            <thead>
-              <tr>
-                <th>Валюта</th>
-                <th onClick={() => handleSortChange(SORT_FIELD_RATE_USD)}>
-                  Курс (USD)
-                  {' '}
-                  {sortArrow}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedCurrencies.map((currency) => (
-                <CurrencyItem key={currency.id} currency={currency} />
-              ))}
-            </tbody>
-          </table>
-          <Pagination
-            totalItems={displayedCurrencies.length}
-            currentPage={page}
-            perPage={perPage}
-            onPageChange={handlePageChange}
-          />
-        </>
-      )}
+      <StatusHandler status={status} error={error}>
+        <div className={cls.controls}>
+          <select value={perPage} onChange={handlePerPageChange}>
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+          <button type="button" onClick={() => dispatch(fetchCurrencies())}>
+            Обновить данные
+          </button>
+        </div>
+        <table className={cls.table}>
+          <thead>
+            <tr>
+              <th>Валюта</th>
+              <th onClick={() => handleSortChange(SORT_FIELD_RATE_USD)}>
+                Курс (USD)
+                {' '}
+                {sortArrow}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedCurrencies.map((currency) => (
+              <CurrencyItem key={currency.id} currency={currency} />
+            ))}
+          </tbody>
+        </table>
+        <Pagination
+          totalItems={displayedCurrencies.length}
+          currentPage={page}
+          perPage={perPage}
+          onPageChange={handlePageChange}
+        />
+      </StatusHandler>
     </div>
   );
 };

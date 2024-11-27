@@ -5,17 +5,24 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { useAppSelector } from '@/app/store/hooks';
-import { selectAllCurrencies } from '@/app/store/currenciesSlice';
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
+import {
+  fetchCurrencies, selectAllCurrencies, selectCurrenciesError, selectCurrenciesStatus,
+} from '@/app/store/currenciesSlice';
 import Big from 'big.js';
+import StatusHandler from '@/components/StatusHandler/StatusHandler';
 import cls from './ConvertPage.module.scss';
 
 const ConvertPage: React.FC = () => {
   const currencies = useAppSelector(selectAllCurrencies);
+  const currenciesStatus = useAppSelector(selectCurrenciesStatus);
+  const error = useAppSelector(selectCurrenciesError);
 
-  const [fromCurrency, setFromCurrency] = useState<string>('BTC');
-  const [toCurrency, setToCurrency] = useState<string>('RUB');
-  const [amount, setAmount] = useState<string>('');
+  const dispatch = useAppDispatch();
+
+  const [fromCurrency, setFromCurrency] = useState<string>(() => localStorage.getItem('fromCurrency') || 'BTC');
+  const [toCurrency, setToCurrency] = useState<string>(() => localStorage.getItem('toCurrency') || 'RUB');
+  const [amount, setAmount] = useState<string>(() => localStorage.getItem('amount') || '');
   const [result, setResult] = useState<string>('');
 
   const handleFromCurrencyChange = useCallback(
@@ -49,6 +56,24 @@ const ConvertPage: React.FC = () => {
       {currency.name ? ` - ${currency.name}` : ''}
     </option>
   )), [currencies]);
+
+  useEffect(() => {
+    if (currenciesStatus === 'idle') {
+      dispatch(fetchCurrencies());
+    }
+  }, [currenciesStatus, dispatch]);
+
+  useEffect(() => {
+    localStorage.setItem('fromCurrency', fromCurrency);
+  }, [fromCurrency]);
+
+  useEffect(() => {
+    localStorage.setItem('toCurrency', toCurrency);
+  }, [toCurrency]);
+
+  useEffect(() => {
+    localStorage.setItem('amount', amount);
+  }, [amount]);
 
   useEffect(() => {
     if (fromCurrency === toCurrency || !amount) {
@@ -86,38 +111,40 @@ const ConvertPage: React.FC = () => {
   return (
     <div className={cls.convertPage}>
       <h2>Конвертация валют</h2>
-      <form className={cls.form}>
-        <div className={cls.inputGroup}>
-          <label htmlFor="from">From:</label>
-          <select
-            id="from"
-            value={fromCurrency}
-            onChange={handleFromCurrencyChange}
-          >
-            {currencyOptions}
-          </select>
-        </div>
-        <div className={cls.inputGroup}>
-          <label htmlFor="to">To:</label>
-          <select
-            id="to"
-            value={toCurrency}
-            onChange={handleToCurrencyChange}
-          >
-            {currencyOptions}
-          </select>
-        </div>
-        <div className={cls.inputGroup}>
-          <label htmlFor="amount">Amount:</label>
-          <input
-            type="text"
-            id="amount"
-            value={amount}
-            onChange={handleAmountChange}
-            placeholder="Enter amount"
-          />
-        </div>
-      </form>
+      <StatusHandler status={currenciesStatus} error={error}>
+        <form className={cls.form}>
+          <div className={cls.inputGroup}>
+            <label htmlFor="from">From:</label>
+            <select
+              id="from"
+              value={fromCurrency}
+              onChange={handleFromCurrencyChange}
+            >
+              {currencyOptions}
+            </select>
+          </div>
+          <div className={cls.inputGroup}>
+            <label htmlFor="to">To:</label>
+            <select
+              id="to"
+              value={toCurrency}
+              onChange={handleToCurrencyChange}
+            >
+              {currencyOptions}
+            </select>
+          </div>
+          <div className={cls.inputGroup}>
+            <label htmlFor="amount">Amount:</label>
+            <input
+              type="text"
+              id="amount"
+              value={amount}
+              onChange={handleAmountChange}
+              placeholder="Enter amount"
+            />
+          </div>
+        </form>
+      </StatusHandler>
       {result && <p className={cls.result}>{result}</p>}
     </div>
   );

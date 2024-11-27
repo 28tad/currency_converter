@@ -3,7 +3,7 @@ import './Loader.scss';
 
 export function Loader() {
   return (
-    <div className={classNames('lds-ellipsis', {})}>
+    <div className="lds-ellipsis">
       <div />
       <div />
       <div />
